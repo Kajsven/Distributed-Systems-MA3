@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package timeservice.v1;
+
+option go_package = "Distributed-Systems-MA3/grpc/time";
+
+import "google/protobuf/timestamp.proto";
+
+service TimeService {
+  // GetCurrentTime returns the server's current time.
+  rpc GetCurrentTime(GetCurrentTimeRequest) returns (GetCurrentTimeResponse);
+}
+
+message GetCurrentTimeRequest {}
+
+message GetCurrentTimeResponse {
+  google.protobuf.Timestamp time = 1;
+}
