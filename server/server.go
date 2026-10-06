@@ -4,22 +4,20 @@ import (
 	"context"
 	"log"
 	"net"
-	"time"
-	
+
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/timestamppb"
-	
+
 	pb "Distributed-Systems-MA3/grpc"
 )
 
-type timeServer struct {
-	pb.UnimplementedTimeServiceServer
+type chatServer struct {
+	pb.UnimplementedChatServiceServer
 }
 
-func (s *timeServer) GetCurrentTime(ctx context.Context, _ *pb.GetCurrentTimeRequest) (*pb.GetCurrentTimeResponse, error) {
-	now := time.Now()
-	return &pb.GetCurrentTimeResponse{
-		Time:    timestamppb.New(now),
+func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage) (*pb.PostCurrentMessageResponse, error) {
+	log.Printf("%s", msg.Message)
+	return &pb.PostCurrentMessageResponse{
+		Success: true,
 	}, nil
 }
 
@@ -30,7 +28,7 @@ func main() {
 	}
 
 	srv := grpc.NewServer()
-	pb.RegisterTimeServiceServer(srv, &timeServer{})
+	pb.RegisterChatServiceServer(srv, &chatServer{})
 
 	log.Println("TimeService listening on :50051")
 	if err := srv.Serve(lis); err != nil {

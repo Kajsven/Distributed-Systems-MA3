@@ -2,9 +2,9 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v7.36.0
-// source: time.proto
+// source: grpc/time.proto
 
-package time
+package chat
 
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
@@ -22,64 +22,29 @@ const (
 	_ = protoimpl.EnforceVersion(protoimpl.MaxVersion - 20)
 )
 
-type GetCurrentTimeRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
-}
-
-func (x *GetCurrentTimeRequest) Reset() {
-	*x = GetCurrentTimeRequest{}
-	mi := &file_time_proto_msgTypes[0]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *GetCurrentTimeRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*GetCurrentTimeRequest) ProtoMessage() {}
-
-func (x *GetCurrentTimeRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_time_proto_msgTypes[0]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use GetCurrentTimeRequest.ProtoReflect.Descriptor instead.
-func (*GetCurrentTimeRequest) Descriptor() ([]byte, []int) {
-	return file_time_proto_rawDescGZIP(), []int{0}
-}
-
-type GetCurrentTimeResponse struct {
+type PostCurrentMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Time          *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time,proto3" json:"time,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
-func (x *GetCurrentTimeResponse) Reset() {
-	*x = GetCurrentTimeResponse{}
-	mi := &file_time_proto_msgTypes[1]
+func (x *PostCurrentMessage) Reset() {
+	*x = PostCurrentMessage{}
+	mi := &file_grpc_time_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *GetCurrentTimeResponse) String() string {
+func (x *PostCurrentMessage) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*GetCurrentTimeResponse) ProtoMessage() {}
+func (*PostCurrentMessage) ProtoMessage() {}
 
-func (x *GetCurrentTimeResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_time_proto_msgTypes[1]
+func (x *PostCurrentMessage) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_time_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -90,52 +55,104 @@ func (x *GetCurrentTimeResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use GetCurrentTimeResponse.ProtoReflect.Descriptor instead.
-func (*GetCurrentTimeResponse) Descriptor() ([]byte, []int) {
-	return file_time_proto_rawDescGZIP(), []int{1}
+// Deprecated: Use PostCurrentMessage.ProtoReflect.Descriptor instead.
+func (*PostCurrentMessage) Descriptor() ([]byte, []int) {
+	return file_grpc_time_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *GetCurrentTimeResponse) GetTime() *timestamppb.Timestamp {
+func (x *PostCurrentMessage) GetTime() *timestamppb.Timestamp {
 	if x != nil {
 		return x.Time
 	}
 	return nil
 }
 
-var File_time_proto protoreflect.FileDescriptor
+func (x *PostCurrentMessage) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
 
-const file_time_proto_rawDesc = "" +
+type PostCurrentMessageResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PostCurrentMessageResponse) Reset() {
+	*x = PostCurrentMessageResponse{}
+	mi := &file_grpc_time_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PostCurrentMessageResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PostCurrentMessageResponse) ProtoMessage() {}
+
+func (x *PostCurrentMessageResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_time_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PostCurrentMessageResponse.ProtoReflect.Descriptor instead.
+func (*PostCurrentMessageResponse) Descriptor() ([]byte, []int) {
+	return file_grpc_time_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *PostCurrentMessageResponse) GetSuccess() bool {
+	if x != nil {
+		return x.Success
+	}
+	return false
+}
+
+var File_grpc_time_proto protoreflect.FileDescriptor
+
+const file_grpc_time_proto_rawDesc = "" +
 	"\n" +
-	"\n" +
-	"time.proto\x12\x0etimeservice.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"\x17\n" +
-	"\x15GetCurrentTimeRequest\"H\n" +
-	"\x16GetCurrentTimeResponse\x12.\n" +
-	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time2n\n" +
-	"\vTimeService\x12_\n" +
-	"\x0eGetCurrentTime\x12%.timeservice.v1.GetCurrentTimeRequest\x1a&.timeservice.v1.GetCurrentTimeResponseB#Z!Distributed-Systems-MA3/grpc/timeb\x06proto3"
+	"\x0fgrpc/time.proto\x12\x0echatservice.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"^\n" +
+	"\x12PostCurrentMessage\x12.\n" +
+	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\"6\n" +
+	"\x1aPostCurrentMessageResponse\x12\x18\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess2l\n" +
+	"\vChatService\x12]\n" +
+	"\vPostMessage\x12\".chatservice.v1.PostCurrentMessage\x1a*.chatservice.v1.PostCurrentMessageResponseB#Z!Distributed-Systems-MA3/grpc/chatb\x06proto3"
 
 var (
-	file_time_proto_rawDescOnce sync.Once
-	file_time_proto_rawDescData []byte
+	file_grpc_time_proto_rawDescOnce sync.Once
+	file_grpc_time_proto_rawDescData []byte
 )
 
-func file_time_proto_rawDescGZIP() []byte {
-	file_time_proto_rawDescOnce.Do(func() {
-		file_time_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_time_proto_rawDesc), len(file_time_proto_rawDesc)))
+func file_grpc_time_proto_rawDescGZIP() []byte {
+	file_grpc_time_proto_rawDescOnce.Do(func() {
+		file_grpc_time_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_grpc_time_proto_rawDesc), len(file_grpc_time_proto_rawDesc)))
 	})
-	return file_time_proto_rawDescData
+	return file_grpc_time_proto_rawDescData
 }
 
-var file_time_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
-var file_time_proto_goTypes = []any{
-	(*GetCurrentTimeRequest)(nil),  // 0: timeservice.v1.GetCurrentTimeRequest
-	(*GetCurrentTimeResponse)(nil), // 1: timeservice.v1.GetCurrentTimeResponse
-	(*timestamppb.Timestamp)(nil),  // 2: google.protobuf.Timestamp
+var file_grpc_time_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_grpc_time_proto_goTypes = []any{
+	(*PostCurrentMessage)(nil),         // 0: chatservice.v1.PostCurrentMessage
+	(*PostCurrentMessageResponse)(nil), // 1: chatservice.v1.PostCurrentMessageResponse
+	(*timestamppb.Timestamp)(nil),      // 2: google.protobuf.Timestamp
 }
-var file_time_proto_depIdxs = []int32{
-	2, // 0: timeservice.v1.GetCurrentTimeResponse.time:type_name -> google.protobuf.Timestamp
-	0, // 1: timeservice.v1.TimeService.GetCurrentTime:input_type -> timeservice.v1.GetCurrentTimeRequest
-	1, // 2: timeservice.v1.TimeService.GetCurrentTime:output_type -> timeservice.v1.GetCurrentTimeResponse
+var file_grpc_time_proto_depIdxs = []int32{
+	2, // 0: chatservice.v1.PostCurrentMessage.time:type_name -> google.protobuf.Timestamp
+	0, // 1: chatservice.v1.ChatService.PostMessage:input_type -> chatservice.v1.PostCurrentMessage
+	1, // 2: chatservice.v1.ChatService.PostMessage:output_type -> chatservice.v1.PostCurrentMessageResponse
 	2, // [2:3] is the sub-list for method output_type
 	1, // [1:2] is the sub-list for method input_type
 	1, // [1:1] is the sub-list for extension type_name
@@ -143,26 +160,26 @@ var file_time_proto_depIdxs = []int32{
 	0, // [0:1] is the sub-list for field type_name
 }
 
-func init() { file_time_proto_init() }
-func file_time_proto_init() {
-	if File_time_proto != nil {
+func init() { file_grpc_time_proto_init() }
+func file_grpc_time_proto_init() {
+	if File_grpc_time_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_time_proto_rawDesc), len(file_time_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_time_proto_rawDesc), len(file_grpc_time_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   2,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_time_proto_goTypes,
-		DependencyIndexes: file_time_proto_depIdxs,
-		MessageInfos:      file_time_proto_msgTypes,
+		GoTypes:           file_grpc_time_proto_goTypes,
+		DependencyIndexes: file_grpc_time_proto_depIdxs,
+		MessageInfos:      file_grpc_time_proto_msgTypes,
 	}.Build()
-	File_time_proto = out.File
-	file_time_proto_goTypes = nil
-	file_time_proto_depIdxs = nil
+	File_grpc_time_proto = out.File
+	file_grpc_time_proto_goTypes = nil
+	file_grpc_time_proto_depIdxs = nil
 }
