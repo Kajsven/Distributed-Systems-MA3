@@ -8,14 +8,33 @@ import "google/protobuf/timestamp.proto";
 
 service ChatService {
   rpc PostMessage(PostCurrentMessage) returns (PostCurrentMessageResponse);
-
+  rpc Connect(ConnectRequest) returns (stream BroadCast);
+  rpc GetId(RequestId) returns (ResponseId);
 }
 
 message PostCurrentMessage {
   google.protobuf.Timestamp time = 1;
   string message = 2;
+  int32 clientId = 3;
 }
 
 message PostCurrentMessageResponse {
   bool success = 1;
+}
+
+message ConnectRequest {
+  int32 clientId = 1;
+  string username = 2;
+}
+
+message BroadCast {
+  google.protobuf.Timestamp time = 1;
+  string message = 2;
+  string username = 3;
+}
+
+message RequestId{}
+
+message ResponseId{
+  int32 clientId = 1;
 }

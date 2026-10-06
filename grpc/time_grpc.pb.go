@@ -20,6 +20,8 @@ const _ = grpc.SupportPackageIsVersion9
 
 const (
 	ChatService_PostMessage_FullMethodName = "/chatservice.v1.ChatService/PostMessage"
+	ChatService_Connect_FullMethodName     = "/chatservice.v1.ChatService/Connect"
+	ChatService_GetId_FullMethodName       = "/chatservice.v1.ChatService/GetId"
 )
 
 // ChatServiceClient is the client API for ChatService service.
@@ -27,6 +29,8 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type ChatServiceClient interface {
 	PostMessage(ctx context.Context, in *PostCurrentMessage, opts ...grpc.CallOption) (*PostCurrentMessageResponse, error)
+	Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[BroadCast], error)
+	GetId(ctx context.Context, in *RequestId, opts ...grpc.CallOption) (*ResponseId, error)
 }
 
 type chatServiceClient struct {
@@ -47,11 +51,42 @@ func (c *chatServiceClient) PostMessage(ctx context.Context, in *PostCurrentMess
 	return out, nil
 }
 
+func (c *chatServiceClient) Connect(ctx context.Context, in *ConnectRequest, opts ...grpc.CallOption) (grpc.ServerStreamingClient[BroadCast], error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	stream, err := c.cc.NewStream(ctx, &ChatService_ServiceDesc.Streams[0], ChatService_Connect_FullMethodName, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &grpc.GenericClientStream[ConnectRequest, BroadCast]{ClientStream: stream}
+	if err := x.ClientStream.SendMsg(in); err != nil {
+		return nil, err
+	}
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	return x, nil
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ChatService_ConnectClient = grpc.ServerStreamingClient[BroadCast]
+
+func (c *chatServiceClient) GetId(ctx context.Context, in *RequestId, opts ...grpc.CallOption) (*ResponseId, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ResponseId)
+	err := c.cc.Invoke(ctx, ChatService_GetId_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // ChatServiceServer is the server API for ChatService service.
 // All implementations must embed UnimplementedChatServiceServer
 // for forward compatibility.
 type ChatServiceServer interface {
 	PostMessage(context.Context, *PostCurrentMessage) (*PostCurrentMessageResponse, error)
+	Connect(*ConnectRequest, grpc.ServerStreamingServer[BroadCast]) error
+	GetId(context.Context, *RequestId) (*ResponseId, error)
 	mustEmbedUnimplementedChatServiceServer()
 }
 
@@ -64,6 +99,12 @@ type UnimplementedChatServiceServer struct{}
 
 func (UnimplementedChatServiceServer) PostMessage(context.Context, *PostCurrentMessage) (*PostCurrentMessageResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method PostMessage not implemented")
+}
+func (UnimplementedChatServiceServer) Connect(*ConnectRequest, grpc.ServerStreamingServer[BroadCast]) error {
+	return status.Error(codes.Unimplemented, "method Connect not implemented")
+}
+func (UnimplementedChatServiceServer) GetId(context.Context, *RequestId) (*ResponseId, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetId not implemented")
 }
 func (UnimplementedChatServiceServer) mustEmbedUnimplementedChatServiceServer() {}
 func (UnimplementedChatServiceServer) testEmbeddedByValue()                     {}
@@ -104,6 +145,35 @@ func _ChatService_PostMessage_Handler(srv interface{}, ctx context.Context, dec 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _ChatService_Connect_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(ConnectRequest)
+	if err := stream.RecvMsg(m); err != nil {
+		return err
+	}
+	return srv.(ChatServiceServer).Connect(m, &grpc.GenericServerStream[ConnectRequest, BroadCast]{ServerStream: stream})
+}
+
+// This type alias is provided for backwards compatibility with existing code that references the prior non-generic stream type by name.
+type ChatService_ConnectServer = grpc.ServerStreamingServer[BroadCast]
+
+func _ChatService_GetId_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RequestId)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ChatServiceServer).GetId(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ChatService_GetId_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ChatServiceServer).GetId(ctx, req.(*RequestId))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // ChatService_ServiceDesc is the grpc.ServiceDesc for ChatService service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -115,7 +185,17 @@ var ChatService_ServiceDesc = grpc.ServiceDesc{
 			MethodName: "PostMessage",
 			Handler:    _ChatService_PostMessage_Handler,
 		},
+		{
+			MethodName: "GetId",
+			Handler:    _ChatService_GetId_Handler,
+		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "Connect",
+			Handler:       _ChatService_Connect_Handler,
+			ServerStreams: true,
+		},
+	},
 	Metadata: "grpc/time.proto",
 }

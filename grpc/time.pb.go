@@ -26,6 +26,7 @@ type PostCurrentMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Time          *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time,proto3" json:"time,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	ClientId      int32                  `protobuf:"varint,3,opt,name=clientId,proto3" json:"clientId,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -74,6 +75,13 @@ func (x *PostCurrentMessage) GetMessage() string {
 	return ""
 }
 
+func (x *PostCurrentMessage) GetClientId() int32 {
+	if x != nil {
+		return x.ClientId
+	}
+	return 0
+}
+
 type PostCurrentMessageResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
@@ -118,18 +126,224 @@ func (x *PostCurrentMessageResponse) GetSuccess() bool {
 	return false
 }
 
+type ConnectRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ClientId      int32                  `protobuf:"varint,1,opt,name=clientId,proto3" json:"clientId,omitempty"`
+	Username      string                 `protobuf:"bytes,2,opt,name=username,proto3" json:"username,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ConnectRequest) Reset() {
+	*x = ConnectRequest{}
+	mi := &file_grpc_time_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ConnectRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ConnectRequest) ProtoMessage() {}
+
+func (x *ConnectRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_time_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ConnectRequest.ProtoReflect.Descriptor instead.
+func (*ConnectRequest) Descriptor() ([]byte, []int) {
+	return file_grpc_time_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *ConnectRequest) GetClientId() int32 {
+	if x != nil {
+		return x.ClientId
+	}
+	return 0
+}
+
+func (x *ConnectRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+type BroadCast struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Time          *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time,proto3" json:"time,omitempty"`
+	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
+	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *BroadCast) Reset() {
+	*x = BroadCast{}
+	mi := &file_grpc_time_proto_msgTypes[3]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BroadCast) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BroadCast) ProtoMessage() {}
+
+func (x *BroadCast) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_time_proto_msgTypes[3]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BroadCast.ProtoReflect.Descriptor instead.
+func (*BroadCast) Descriptor() ([]byte, []int) {
+	return file_grpc_time_proto_rawDescGZIP(), []int{3}
+}
+
+func (x *BroadCast) GetTime() *timestamppb.Timestamp {
+	if x != nil {
+		return x.Time
+	}
+	return nil
+}
+
+func (x *BroadCast) GetMessage() string {
+	if x != nil {
+		return x.Message
+	}
+	return ""
+}
+
+func (x *BroadCast) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+type RequestId struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *RequestId) Reset() {
+	*x = RequestId{}
+	mi := &file_grpc_time_proto_msgTypes[4]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RequestId) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RequestId) ProtoMessage() {}
+
+func (x *RequestId) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_time_proto_msgTypes[4]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RequestId.ProtoReflect.Descriptor instead.
+func (*RequestId) Descriptor() ([]byte, []int) {
+	return file_grpc_time_proto_rawDescGZIP(), []int{4}
+}
+
+type ResponseId struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	ClientId      int32                  `protobuf:"varint,1,opt,name=clientId,proto3" json:"clientId,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ResponseId) Reset() {
+	*x = ResponseId{}
+	mi := &file_grpc_time_proto_msgTypes[5]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ResponseId) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ResponseId) ProtoMessage() {}
+
+func (x *ResponseId) ProtoReflect() protoreflect.Message {
+	mi := &file_grpc_time_proto_msgTypes[5]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ResponseId.ProtoReflect.Descriptor instead.
+func (*ResponseId) Descriptor() ([]byte, []int) {
+	return file_grpc_time_proto_rawDescGZIP(), []int{5}
+}
+
+func (x *ResponseId) GetClientId() int32 {
+	if x != nil {
+		return x.ClientId
+	}
+	return 0
+}
+
 var File_grpc_time_proto protoreflect.FileDescriptor
 
 const file_grpc_time_proto_rawDesc = "" +
 	"\n" +
-	"\x0fgrpc/time.proto\x12\x0echatservice.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"^\n" +
+	"\x0fgrpc/time.proto\x12\x0echatservice.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"z\n" +
 	"\x12PostCurrentMessage\x12.\n" +
 	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x18\n" +
-	"\amessage\x18\x02 \x01(\tR\amessage\"6\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1a\n" +
+	"\bclientId\x18\x03 \x01(\x05R\bclientId\"6\n" +
 	"\x1aPostCurrentMessageResponse\x12\x18\n" +
-	"\asuccess\x18\x01 \x01(\bR\asuccess2l\n" +
+	"\asuccess\x18\x01 \x01(\bR\asuccess\"H\n" +
+	"\x0eConnectRequest\x12\x1a\n" +
+	"\bclientId\x18\x01 \x01(\x05R\bclientId\x12\x1a\n" +
+	"\busername\x18\x02 \x01(\tR\busername\"q\n" +
+	"\tBroadCast\x12.\n" +
+	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x18\n" +
+	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1a\n" +
+	"\busername\x18\x03 \x01(\tR\busername\"\v\n" +
+	"\tRequestId\"(\n" +
+	"\n" +
+	"ResponseId\x12\x1a\n" +
+	"\bclientId\x18\x01 \x01(\x05R\bclientId2\xf4\x01\n" +
 	"\vChatService\x12]\n" +
-	"\vPostMessage\x12\".chatservice.v1.PostCurrentMessage\x1a*.chatservice.v1.PostCurrentMessageResponseB#Z!Distributed-Systems-MA3/grpc/chatb\x06proto3"
+	"\vPostMessage\x12\".chatservice.v1.PostCurrentMessage\x1a*.chatservice.v1.PostCurrentMessageResponse\x12F\n" +
+	"\aConnect\x12\x1e.chatservice.v1.ConnectRequest\x1a\x19.chatservice.v1.BroadCast0\x01\x12>\n" +
+	"\x05GetId\x12\x19.chatservice.v1.RequestId\x1a\x1a.chatservice.v1.ResponseIdB#Z!Distributed-Systems-MA3/grpc/chatb\x06proto3"
 
 var (
 	file_grpc_time_proto_rawDescOnce sync.Once
@@ -143,21 +357,30 @@ func file_grpc_time_proto_rawDescGZIP() []byte {
 	return file_grpc_time_proto_rawDescData
 }
 
-var file_grpc_time_proto_msgTypes = make([]protoimpl.MessageInfo, 2)
+var file_grpc_time_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_grpc_time_proto_goTypes = []any{
 	(*PostCurrentMessage)(nil),         // 0: chatservice.v1.PostCurrentMessage
 	(*PostCurrentMessageResponse)(nil), // 1: chatservice.v1.PostCurrentMessageResponse
-	(*timestamppb.Timestamp)(nil),      // 2: google.protobuf.Timestamp
+	(*ConnectRequest)(nil),             // 2: chatservice.v1.ConnectRequest
+	(*BroadCast)(nil),                  // 3: chatservice.v1.BroadCast
+	(*RequestId)(nil),                  // 4: chatservice.v1.RequestId
+	(*ResponseId)(nil),                 // 5: chatservice.v1.ResponseId
+	(*timestamppb.Timestamp)(nil),      // 6: google.protobuf.Timestamp
 }
 var file_grpc_time_proto_depIdxs = []int32{
-	2, // 0: chatservice.v1.PostCurrentMessage.time:type_name -> google.protobuf.Timestamp
-	0, // 1: chatservice.v1.ChatService.PostMessage:input_type -> chatservice.v1.PostCurrentMessage
-	1, // 2: chatservice.v1.ChatService.PostMessage:output_type -> chatservice.v1.PostCurrentMessageResponse
-	2, // [2:3] is the sub-list for method output_type
-	1, // [1:2] is the sub-list for method input_type
-	1, // [1:1] is the sub-list for extension type_name
-	1, // [1:1] is the sub-list for extension extendee
-	0, // [0:1] is the sub-list for field type_name
+	6, // 0: chatservice.v1.PostCurrentMessage.time:type_name -> google.protobuf.Timestamp
+	6, // 1: chatservice.v1.BroadCast.time:type_name -> google.protobuf.Timestamp
+	0, // 2: chatservice.v1.ChatService.PostMessage:input_type -> chatservice.v1.PostCurrentMessage
+	2, // 3: chatservice.v1.ChatService.Connect:input_type -> chatservice.v1.ConnectRequest
+	4, // 4: chatservice.v1.ChatService.GetId:input_type -> chatservice.v1.RequestId
+	1, // 5: chatservice.v1.ChatService.PostMessage:output_type -> chatservice.v1.PostCurrentMessageResponse
+	3, // 6: chatservice.v1.ChatService.Connect:output_type -> chatservice.v1.BroadCast
+	5, // 7: chatservice.v1.ChatService.GetId:output_type -> chatservice.v1.ResponseId
+	5, // [5:8] is the sub-list for method output_type
+	2, // [2:5] is the sub-list for method input_type
+	2, // [2:2] is the sub-list for extension type_name
+	2, // [2:2] is the sub-list for extension extendee
+	0, // [0:2] is the sub-list for field type_name
 }
 
 func init() { file_grpc_time_proto_init() }
@@ -171,7 +394,7 @@ func file_grpc_time_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_time_proto_rawDesc), len(file_grpc_time_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   2,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
