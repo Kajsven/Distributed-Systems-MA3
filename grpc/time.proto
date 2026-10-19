@@ -13,7 +13,7 @@ service ChatService {
 }
 
 message PostCurrentMessage {
-  google.protobuf.Timestamp time = 1;
+  int64 time = 1;
   string message = 2;
   int32 clientId = 3;
 }
@@ -28,7 +28,7 @@ message ConnectRequest {
 }
 
 message BroadCast {
-  google.protobuf.Timestamp time = 1;
+  int64 time = 1;
   string message = 2;
   string username = 3;
 }

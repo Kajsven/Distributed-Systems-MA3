@@ -9,7 +9,7 @@ package chat
 import (
 	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
 	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
-	timestamppb "google.golang.org/protobuf/types/known/timestamppb"
+	_ "google.golang.org/protobuf/types/known/timestamppb"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
@@ -24,7 +24,7 @@ const (
 
 type PostCurrentMessage struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Time          *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time,proto3" json:"time,omitempty"`
+	Time          int64                  `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	ClientId      int32                  `protobuf:"varint,3,opt,name=clientId,proto3" json:"clientId,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -61,11 +61,11 @@ func (*PostCurrentMessage) Descriptor() ([]byte, []int) {
 	return file_time_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *PostCurrentMessage) GetTime() *timestamppb.Timestamp {
+func (x *PostCurrentMessage) GetTime() int64 {
 	if x != nil {
 		return x.Time
 	}
-	return nil
+	return 0
 }
 
 func (x *PostCurrentMessage) GetMessage() string {
@@ -180,7 +180,7 @@ func (x *ConnectRequest) GetUsername() string {
 
 type BroadCast struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Time          *timestamppb.Timestamp `protobuf:"bytes,1,opt,name=time,proto3" json:"time,omitempty"`
+	Time          int64                  `protobuf:"varint,1,opt,name=time,proto3" json:"time,omitempty"`
 	Message       string                 `protobuf:"bytes,2,opt,name=message,proto3" json:"message,omitempty"`
 	Username      string                 `protobuf:"bytes,3,opt,name=username,proto3" json:"username,omitempty"`
 	unknownFields protoimpl.UnknownFields
@@ -217,11 +217,11 @@ func (*BroadCast) Descriptor() ([]byte, []int) {
 	return file_time_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *BroadCast) GetTime() *timestamppb.Timestamp {
+func (x *BroadCast) GetTime() int64 {
 	if x != nil {
 		return x.Time
 	}
-	return nil
+	return 0
 }
 
 func (x *BroadCast) GetMessage() string {
@@ -323,18 +323,18 @@ var File_time_proto protoreflect.FileDescriptor
 const file_time_proto_rawDesc = "" +
 	"\n" +
 	"\n" +
-	"time.proto\x12\x0echatservice.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"z\n" +
-	"\x12PostCurrentMessage\x12.\n" +
-	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x18\n" +
+	"time.proto\x12\x0echatservice.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"^\n" +
+	"\x12PostCurrentMessage\x12\x12\n" +
+	"\x04time\x18\x01 \x01(\x03R\x04time\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1a\n" +
 	"\bclientId\x18\x03 \x01(\x05R\bclientId\"6\n" +
 	"\x1aPostCurrentMessageResponse\x12\x18\n" +
 	"\asuccess\x18\x01 \x01(\bR\asuccess\"H\n" +
 	"\x0eConnectRequest\x12\x1a\n" +
 	"\bclientId\x18\x01 \x01(\x05R\bclientId\x12\x1a\n" +
-	"\busername\x18\x02 \x01(\tR\busername\"q\n" +
-	"\tBroadCast\x12.\n" +
-	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x18\n" +
+	"\busername\x18\x02 \x01(\tR\busername\"U\n" +
+	"\tBroadCast\x12\x12\n" +
+	"\x04time\x18\x01 \x01(\x03R\x04time\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1a\n" +
 	"\busername\x18\x03 \x01(\tR\busername\"\v\n" +
 	"\tRequestId\"(\n" +
@@ -366,22 +366,19 @@ var file_time_proto_goTypes = []any{
 	(*BroadCast)(nil),                  // 3: chatservice.v1.BroadCast
 	(*RequestId)(nil),                  // 4: chatservice.v1.RequestId
 	(*ResponseId)(nil),                 // 5: chatservice.v1.ResponseId
-	(*timestamppb.Timestamp)(nil),      // 6: google.protobuf.Timestamp
 }
 var file_time_proto_depIdxs = []int32{
-	6, // 0: chatservice.v1.PostCurrentMessage.time:type_name -> google.protobuf.Timestamp
-	6, // 1: chatservice.v1.BroadCast.time:type_name -> google.protobuf.Timestamp
-	0, // 2: chatservice.v1.ChatService.PostMessage:input_type -> chatservice.v1.PostCurrentMessage
-	2, // 3: chatservice.v1.ChatService.Connect:input_type -> chatservice.v1.ConnectRequest
-	4, // 4: chatservice.v1.ChatService.GetId:input_type -> chatservice.v1.RequestId
-	1, // 5: chatservice.v1.ChatService.PostMessage:output_type -> chatservice.v1.PostCurrentMessageResponse
-	3, // 6: chatservice.v1.ChatService.Connect:output_type -> chatservice.v1.BroadCast
-	5, // 7: chatservice.v1.ChatService.GetId:output_type -> chatservice.v1.ResponseId
-	5, // [5:8] is the sub-list for method output_type
-	2, // [2:5] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	0, // 0: chatservice.v1.ChatService.PostMessage:input_type -> chatservice.v1.PostCurrentMessage
+	2, // 1: chatservice.v1.ChatService.Connect:input_type -> chatservice.v1.ConnectRequest
+	4, // 2: chatservice.v1.ChatService.GetId:input_type -> chatservice.v1.RequestId
+	1, // 3: chatservice.v1.ChatService.PostMessage:output_type -> chatservice.v1.PostCurrentMessageResponse
+	3, // 4: chatservice.v1.ChatService.Connect:output_type -> chatservice.v1.BroadCast
+	5, // 5: chatservice.v1.ChatService.GetId:output_type -> chatservice.v1.ResponseId
+	3, // [3:6] is the sub-list for method output_type
+	0, // [0:3] is the sub-list for method input_type
+	0, // [0:0] is the sub-list for extension type_name
+	0, // [0:0] is the sub-list for extension extendee
+	0, // [0:0] is the sub-list for field type_name
 }
 
 func init() { file_time_proto_init() }
