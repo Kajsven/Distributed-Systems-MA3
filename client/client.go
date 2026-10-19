@@ -12,7 +12,6 @@ import (
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
-	"google.golang.org/protobuf/types/known/timestamppb"
 
 	pb "Distributed-Systems-MA3/grpc"
 )
@@ -21,6 +20,8 @@ var myId int32 = -1
 var scanner = bufio.NewScanner(os.Stdin)
 var stream pb.ChatService_ConnectClient
 var wg = sync.WaitGroup{}
+var lamportClock int64 = 0
+var mu sync.Mutex
 
 func main() {
 	conn, err := grpc.NewClient("127.0.0.1:50051",
@@ -48,19 +49,6 @@ func main() {
 	conResp, err := pb.NewChatServiceClient(conn).Connect(ctx, &postConnection)
 	stream = conResp
 
-	// message := pb.PostCurrentMessage{
-	// 	Time:     timestamppb.New(time.Now()),
-	// 	Message:  "Joined the chat!",
-	// 	ClientId: myId,
-	// }
-
-	// resp, err := pb.NewChatServiceClient(conn).PostMessage(ctx, &message)
-	// if err != nil {
-	// 	log.Fatalf("GetCurrentTime: %v", err)
-	// }
-
-	//log.Println("Success Status:  ", resp.Success)
-
 	wg.Add(2)
 	go broadcastMessages()
 	go sendMessages(conn, ctx)
@@ -70,9 +58,12 @@ func main() {
 func sendMessages(conn *grpc.ClientConn, ctx context.Context) {
 	defer wg.Done()
 	for {
+		mu.Lock()
+		lamportClock++
+		mu.Unlock()
 		scanner.Scan()
 		msg := pb.PostCurrentMessage{
-			Time:     timestamppb.New(time.Now()),
+			Time:     lamportClock,
 			Message:  scanner.Text(),
 			ClientId: myId,
 		}
@@ -93,6 +84,9 @@ func broadcastMessages() {
 		if err != nil {
 			log.Fatalf("can not receive %v", err)
 		}
-		fmt.Printf("%s, %s: %s\n", resp.Username, resp.Time.AsTime().Local().Format("15:04"), resp.Message)
+		mu.Lock()
+		lamportClock = max(lamportClock, resp.Time) + 1
+		mu.Unlock()
+		fmt.Printf("%s, %s, LC(%d): %s\n", resp.Username, time.Now().Local().Format("15:04"), lamportClock, resp.Message)
 	}
 }

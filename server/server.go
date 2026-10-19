@@ -5,19 +5,18 @@ import (
 	"log"
 	"net"
 	"sync"
-	"time"
 
 	"google.golang.org/grpc"
-	"google.golang.org/protobuf/types/known/timestamppb"
 
 	pb "Distributed-Systems-MA3/grpc"
 )
 
 type chatServer struct {
 	pb.UnimplementedChatServiceServer
-	idCount  int32
-	usersMap map[int32]client
-	mu 	 sync.Mutex
+	idCount      int32
+	usersMap     map[int32]client
+	mu           sync.Mutex
+	lamportClock int64
 }
 
 func newChatServer() *chatServer {
@@ -28,6 +27,7 @@ type client struct {
 	username string
 	stream   pb.ChatService_ConnectServer
 }
+
 func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.ResponseId, error) {
 	s.idCount++
 	log.Printf("Generated new ID: %d", s.idCount)
@@ -40,8 +40,9 @@ func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_Conne
 	s.mu.Unlock()
 	log.Printf("user %s joined", req.Username)
 
+	s.lamportClock++
 	broadcast(&pb.BroadCast{
-		Time:     timestamppb.New(time.Now()),
+		Time:     s.lamportClock,
 		Message:  req.Username + " joined the chat!",
 		Username: "Server",
 	}, req.ClientId, s)
@@ -51,8 +52,9 @@ func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_Conne
 	delete(s.usersMap, req.ClientId)
 	s.mu.Unlock()
 
+	s.lamportClock++
 	broadcast(&pb.BroadCast{
-		Time:     timestamppb.New(time.Now()),
+		Time:     s.lamportClock,
 		Message:  req.Username + " Left the chat!",
 		Username: "Server",
 	}, req.ClientId, s)
@@ -61,10 +63,11 @@ func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_Conne
 }
 
 func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage) (*pb.PostCurrentMessageResponse, error) {
-	log.Printf("%s", msg.Message)
+	s.lamportClock = max(s.lamportClock, msg.Time) + 1
+	log.Printf("%s, %d", msg.Message, s.lamportClock)
 
 	broadcast(&pb.BroadCast{
-		Time:     msg.Time,
+		Time:     s.lamportClock,
 		Message:  msg.Message,
 		Username: s.usersMap[msg.ClientId].username,
 	}, msg.ClientId, s)
