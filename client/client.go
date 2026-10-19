@@ -21,7 +21,6 @@ var scanner = bufio.NewScanner(os.Stdin)
 var stream pb.ChatService_ConnectClient
 var wg = sync.WaitGroup{}
 
-
 func main() {
 	conn, err := grpc.NewClient("127.0.0.1:50051",
 		grpc.WithTransportCredentials(insecure.NewCredentials()))
@@ -29,8 +28,9 @@ func main() {
 		log.Fatalf("dial: %v", err)
 	}
 	defer conn.Close()
- 
-	ctx := context.Background()
+
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
 	idResp, err := pb.NewChatServiceClient(conn).GetId(ctx, &pb.RequestId{})
 	myId = idResp.ClientId
@@ -47,20 +47,19 @@ func main() {
 	conResp, err := pb.NewChatServiceClient(conn).Connect(ctx, &postConnection)
 	stream = conResp
 
-	
 	message := pb.PostCurrentMessage{
-		Time:    timestamppb.New(time.Now()),
-		Message: "Hello",
+		Time:     timestamppb.New(time.Now()),
+		Message:  "Hello",
 		ClientId: myId,
 	}
-	
+
 	resp, err := pb.NewChatServiceClient(conn).PostMessage(ctx, &message)
 	if err != nil {
 		log.Fatalf("GetCurrentTime: %v", err)
 	}
-	
+
 	log.Println("Success Status:  ", resp.Success)
-	
+
 	wg.Add(1)
 	go broadcastMessages()
 	wg.Wait()
@@ -71,7 +70,7 @@ func broadcastMessages() {
 	for {
 		resp, err := stream.Recv()
 		if err == io.EOF {
-			continue
+			return
 		}
 		if err != nil {
 			log.Fatalf("can not receive %v", err)
@@ -79,5 +78,3 @@ func broadcastMessages() {
 		log.Printf("%s, %s: %s", resp.Time.AsTime(), resp.Username, resp.Message)
 	}
 }
-
- 

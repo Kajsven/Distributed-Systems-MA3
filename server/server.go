@@ -12,7 +12,7 @@ import (
 
 type chatServer struct {
 	pb.UnimplementedChatServiceServer
-	idCount int32
+	idCount  int32
 	usersMap map[int32]client
 }
 
@@ -22,7 +22,7 @@ func newChatServer() *chatServer {
 
 type client struct {
 	username string
-	stream pb.ChatService_ConnectServer
+	stream   pb.ChatService_ConnectServer
 }
 
 func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage) (*pb.PostCurrentMessageResponse, error) {
@@ -33,9 +33,9 @@ func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage
 			continue
 		}
 		err := user.stream.Send(&pb.BroadCast{
-			Time: msg.Time,
-			Message: msg.Message,
-			Username: user.username,
+			Time:     msg.Time,
+			Message:  msg.Message,
+			Username: s.usersMap[msg.ClientId].username,
 		})
 		if err != nil {
 			log.Printf("Error sending message to user %s: %v", user.username, err)
@@ -50,9 +50,12 @@ func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage
 func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
 	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
 	log.Printf("%s", req.Username)
+
+	<-stream.Context().Done()
+	delete(s.usersMap, req.ClientId)
+
 	return nil
-	
-} 
+}
 
 func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.ResponseId, error) {
 	s.idCount++
@@ -61,8 +64,6 @@ func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.Response
 }
 
 func main() {
-	
-
 
 	lis, err := net.Listen("tcp", ":50051")
 	if err != nil {
