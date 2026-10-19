@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"net"
 	"sync"
@@ -29,7 +30,9 @@ type client struct {
 }
 
 func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.ResponseId, error) {
+	s.mu.Lock()
 	s.idCount++
+	s.mu.Unlock()
 	log.Printf("Generated new ID: %d", s.idCount)
 	return &pb.ResponseId{ClientId: s.idCount}, nil
 }
@@ -37,40 +40,43 @@ func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.Response
 func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
 	s.mu.Lock()
 	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
-	s.mu.Unlock()
-	log.Printf("user %s joined", req.Username)
+	log.Printf("User %s joined Chit Chat, %d", req.Username, s.lamportClock)
 
 	s.lamportClock++
 	broadcast(&pb.BroadCast{
 		Time:     s.lamportClock,
-		Message:  req.Username + " joined the chat!",
+		Message:  "Participant " + req.Username + " joined Chit Chat at logical time " + fmt.Sprintf("%d", s.lamportClock),
 		Username: "Server",
-	}, req.ClientId, s)
+	}, -1, s)
+	s.mu.Unlock()
 
 	<-stream.Context().Done()
+
 	s.mu.Lock()
 	delete(s.usersMap, req.ClientId)
-	s.mu.Unlock()
 
 	s.lamportClock++
+	log.Printf("User %s left Chit Chat, %d", req.Username, s.lamportClock)
 	broadcast(&pb.BroadCast{
 		Time:     s.lamportClock,
-		Message:  req.Username + " Left the chat!",
+		Message:  "Participant " + req.Username + " left Chit Chat at logical time " + fmt.Sprintf("%d", s.lamportClock),
 		Username: "Server",
-	}, req.ClientId, s)
-
+	}, -1, s)
+	s.mu.Unlock()
 	return nil
 }
 
 func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage) (*pb.PostCurrentMessageResponse, error) {
+	s.mu.Lock()
 	s.lamportClock = max(s.lamportClock, msg.Time) + 1
-	log.Printf("%s, %d", msg.Message, s.lamportClock)
+	log.Printf("%s: %s, %d", s.usersMap[msg.ClientId].username, msg.Message, s.lamportClock)
 
 	broadcast(&pb.BroadCast{
 		Time:     s.lamportClock,
 		Message:  msg.Message,
 		Username: s.usersMap[msg.ClientId].username,
 	}, msg.ClientId, s)
+	s.mu.Unlock()
 
 	return &pb.PostCurrentMessageResponse{
 		Success: true,
@@ -78,8 +84,6 @@ func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage
 }
 
 func broadcast(msg *pb.BroadCast, senderId int32, s *chatServer) {
-	s.mu.Lock()
-	defer s.mu.Unlock()
 	for id, user := range s.usersMap {
 		if id == senderId {
 			continue

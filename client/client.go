@@ -26,7 +26,6 @@ var myId int32 = -1
 var scanner = bufio.NewScanner(os.Stdin)
 var stream pb.ChatService_ConnectClient
 var wg = sync.WaitGroup{}
-var lamportClock int64 = 0
 
 func main() {
 	conn, err := grpc.NewClient("127.0.0.1:50051",
