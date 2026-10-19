@@ -16,6 +16,12 @@ import (
 	pb "Distributed-Systems-MA3/grpc"
 )
 
+type clockReq struct {
+	received int64
+	reply    chan int64
+}
+
+var clockCh = make(chan clockReq)
 var myId int32 = -1
 var scanner = bufio.NewScanner(os.Stdin)
 var stream pb.ChatService_ConnectClient
@@ -54,13 +60,6 @@ func main() {
 	go sendMessages(conn, ctx)
 	wg.Wait()
 }
-
-type clockReq struct {
-	received int64
-	reply    chan int64
-}
-
-var clockCh = make(chan clockReq)
 
 func clockKeeper() {
 	var lamportClock int64
