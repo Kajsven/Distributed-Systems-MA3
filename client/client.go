@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"context"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -47,22 +48,39 @@ func main() {
 	conResp, err := pb.NewChatServiceClient(conn).Connect(ctx, &postConnection)
 	stream = conResp
 
-	message := pb.PostCurrentMessage{
-		Time:     timestamppb.New(time.Now()),
-		Message:  "Hello",
-		ClientId: myId,
-	}
+	// message := pb.PostCurrentMessage{
+	// 	Time:     timestamppb.New(time.Now()),
+	// 	Message:  "Joined the chat!",
+	// 	ClientId: myId,
+	// }
 
-	resp, err := pb.NewChatServiceClient(conn).PostMessage(ctx, &message)
-	if err != nil {
-		log.Fatalf("GetCurrentTime: %v", err)
-	}
+	// resp, err := pb.NewChatServiceClient(conn).PostMessage(ctx, &message)
+	// if err != nil {
+	// 	log.Fatalf("GetCurrentTime: %v", err)
+	// }
 
-	log.Println("Success Status:  ", resp.Success)
+	//log.Println("Success Status:  ", resp.Success)
 
-	wg.Add(1)
+	wg.Add(2)
 	go broadcastMessages()
+	go sendMessages(conn, ctx)
 	wg.Wait()
+}
+
+func sendMessages(conn *grpc.ClientConn, ctx context.Context) {
+	defer wg.Done()
+	for {
+		scanner.Scan()
+		msg := pb.PostCurrentMessage{
+			Time:     timestamppb.New(time.Now()),
+			Message:  scanner.Text(),
+			ClientId: myId,
+		}
+		_, err := pb.NewChatServiceClient(conn).PostMessage(ctx, &msg)
+		if err != nil {
+			log.Fatalf("GetCurrentTime: %v", err)
+		}
+	}
 }
 
 func broadcastMessages() {
@@ -75,6 +93,6 @@ func broadcastMessages() {
 		if err != nil {
 			log.Fatalf("can not receive %v", err)
 		}
-		log.Printf("%s, %s: %s", resp.Time.AsTime(), resp.Username, resp.Message)
+		fmt.Printf("%s, %s: %s\n", resp.Username, resp.Time.AsTime().Local().Format("15:04"), resp.Message)
 	}
 }

@@ -4,8 +4,10 @@ import (
 	"context"
 	"log"
 	"net"
+	"time"
 
 	"google.golang.org/grpc"
+	"google.golang.org/protobuf/types/known/timestamppb"
 
 	pb "Distributed-Systems-MA3/grpc"
 )
@@ -49,7 +51,21 @@ func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage
 
 func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
 	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
-	log.Printf("%s", req.Username)
+	log.Printf("user %s joined", req.Username)
+
+	for id, user := range s.usersMap {
+		if id == req.ClientId {
+			continue
+		}
+		err := user.stream.Send(&pb.BroadCast{
+			Time:     timestamppb.New(time.Now()),
+			Message:  req.Username + " joined the chat!",
+			Username: "Server",
+		})
+		if err != nil {
+			log.Fatalf(err.Error())
+		}
+	}
 
 	<-stream.Context().Done()
 	delete(s.usersMap, req.ClientId)
@@ -61,6 +77,10 @@ func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.Response
 	s.idCount++
 	log.Printf("Generated new ID: %d", s.idCount)
 	return &pb.ResponseId{ClientId: s.idCount}, nil
+}
+
+func broadcast(msg *pb.BroadCast) {
+
 }
 
 func main() {
