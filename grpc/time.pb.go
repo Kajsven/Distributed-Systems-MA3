@@ -2,7 +2,7 @@
 // versions:
 // 	protoc-gen-go v1.36.12
 // 	protoc        v7.36.0
-// source: grpc/time.proto
+// source: time.proto
 
 package chat
 
@@ -33,7 +33,7 @@ type PostCurrentMessage struct {
 
 func (x *PostCurrentMessage) Reset() {
 	*x = PostCurrentMessage{}
-	mi := &file_grpc_time_proto_msgTypes[0]
+	mi := &file_time_proto_msgTypes[0]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -45,7 +45,7 @@ func (x *PostCurrentMessage) String() string {
 func (*PostCurrentMessage) ProtoMessage() {}
 
 func (x *PostCurrentMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_time_proto_msgTypes[0]
+	mi := &file_time_proto_msgTypes[0]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -58,7 +58,7 @@ func (x *PostCurrentMessage) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostCurrentMessage.ProtoReflect.Descriptor instead.
 func (*PostCurrentMessage) Descriptor() ([]byte, []int) {
-	return file_grpc_time_proto_rawDescGZIP(), []int{0}
+	return file_time_proto_rawDescGZIP(), []int{0}
 }
 
 func (x *PostCurrentMessage) GetTime() *timestamppb.Timestamp {
@@ -91,7 +91,7 @@ type PostCurrentMessageResponse struct {
 
 func (x *PostCurrentMessageResponse) Reset() {
 	*x = PostCurrentMessageResponse{}
-	mi := &file_grpc_time_proto_msgTypes[1]
+	mi := &file_time_proto_msgTypes[1]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -103,7 +103,7 @@ func (x *PostCurrentMessageResponse) String() string {
 func (*PostCurrentMessageResponse) ProtoMessage() {}
 
 func (x *PostCurrentMessageResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_time_proto_msgTypes[1]
+	mi := &file_time_proto_msgTypes[1]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -116,7 +116,7 @@ func (x *PostCurrentMessageResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use PostCurrentMessageResponse.ProtoReflect.Descriptor instead.
 func (*PostCurrentMessageResponse) Descriptor() ([]byte, []int) {
-	return file_grpc_time_proto_rawDescGZIP(), []int{1}
+	return file_time_proto_rawDescGZIP(), []int{1}
 }
 
 func (x *PostCurrentMessageResponse) GetSuccess() bool {
@@ -136,7 +136,7 @@ type ConnectRequest struct {
 
 func (x *ConnectRequest) Reset() {
 	*x = ConnectRequest{}
-	mi := &file_grpc_time_proto_msgTypes[2]
+	mi := &file_time_proto_msgTypes[2]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -148,7 +148,7 @@ func (x *ConnectRequest) String() string {
 func (*ConnectRequest) ProtoMessage() {}
 
 func (x *ConnectRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_time_proto_msgTypes[2]
+	mi := &file_time_proto_msgTypes[2]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -161,7 +161,7 @@ func (x *ConnectRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ConnectRequest.ProtoReflect.Descriptor instead.
 func (*ConnectRequest) Descriptor() ([]byte, []int) {
-	return file_grpc_time_proto_rawDescGZIP(), []int{2}
+	return file_time_proto_rawDescGZIP(), []int{2}
 }
 
 func (x *ConnectRequest) GetClientId() int32 {
@@ -189,7 +189,7 @@ type BroadCast struct {
 
 func (x *BroadCast) Reset() {
 	*x = BroadCast{}
-	mi := &file_grpc_time_proto_msgTypes[3]
+	mi := &file_time_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -201,7 +201,7 @@ func (x *BroadCast) String() string {
 func (*BroadCast) ProtoMessage() {}
 
 func (x *BroadCast) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_time_proto_msgTypes[3]
+	mi := &file_time_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -214,7 +214,7 @@ func (x *BroadCast) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BroadCast.ProtoReflect.Descriptor instead.
 func (*BroadCast) Descriptor() ([]byte, []int) {
-	return file_grpc_time_proto_rawDescGZIP(), []int{3}
+	return file_time_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *BroadCast) GetTime() *timestamppb.Timestamp {
@@ -246,7 +246,7 @@ type RequestId struct {
 
 func (x *RequestId) Reset() {
 	*x = RequestId{}
-	mi := &file_grpc_time_proto_msgTypes[4]
+	mi := &file_time_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -258,7 +258,7 @@ func (x *RequestId) String() string {
 func (*RequestId) ProtoMessage() {}
 
 func (x *RequestId) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_time_proto_msgTypes[4]
+	mi := &file_time_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -271,7 +271,7 @@ func (x *RequestId) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RequestId.ProtoReflect.Descriptor instead.
 func (*RequestId) Descriptor() ([]byte, []int) {
-	return file_grpc_time_proto_rawDescGZIP(), []int{4}
+	return file_time_proto_rawDescGZIP(), []int{4}
 }
 
 type ResponseId struct {
@@ -283,7 +283,7 @@ type ResponseId struct {
 
 func (x *ResponseId) Reset() {
 	*x = ResponseId{}
-	mi := &file_grpc_time_proto_msgTypes[5]
+	mi := &file_time_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -295,7 +295,7 @@ func (x *ResponseId) String() string {
 func (*ResponseId) ProtoMessage() {}
 
 func (x *ResponseId) ProtoReflect() protoreflect.Message {
-	mi := &file_grpc_time_proto_msgTypes[5]
+	mi := &file_time_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -308,7 +308,7 @@ func (x *ResponseId) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ResponseId.ProtoReflect.Descriptor instead.
 func (*ResponseId) Descriptor() ([]byte, []int) {
-	return file_grpc_time_proto_rawDescGZIP(), []int{5}
+	return file_time_proto_rawDescGZIP(), []int{5}
 }
 
 func (x *ResponseId) GetClientId() int32 {
@@ -318,11 +318,12 @@ func (x *ResponseId) GetClientId() int32 {
 	return 0
 }
 
-var File_grpc_time_proto protoreflect.FileDescriptor
+var File_time_proto protoreflect.FileDescriptor
 
-const file_grpc_time_proto_rawDesc = "" +
+const file_time_proto_rawDesc = "" +
 	"\n" +
-	"\x0fgrpc/time.proto\x12\x0echatservice.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"z\n" +
+	"\n" +
+	"time.proto\x12\x0echatservice.v1\x1a\x1fgoogle/protobuf/timestamp.proto\"z\n" +
 	"\x12PostCurrentMessage\x12.\n" +
 	"\x04time\x18\x01 \x01(\v2\x1a.google.protobuf.TimestampR\x04time\x12\x18\n" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1a\n" +
@@ -346,19 +347,19 @@ const file_grpc_time_proto_rawDesc = "" +
 	"\x05GetId\x12\x19.chatservice.v1.RequestId\x1a\x1a.chatservice.v1.ResponseIdB#Z!Distributed-Systems-MA3/grpc/chatb\x06proto3"
 
 var (
-	file_grpc_time_proto_rawDescOnce sync.Once
-	file_grpc_time_proto_rawDescData []byte
+	file_time_proto_rawDescOnce sync.Once
+	file_time_proto_rawDescData []byte
 )
 
-func file_grpc_time_proto_rawDescGZIP() []byte {
-	file_grpc_time_proto_rawDescOnce.Do(func() {
-		file_grpc_time_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_grpc_time_proto_rawDesc), len(file_grpc_time_proto_rawDesc)))
+func file_time_proto_rawDescGZIP() []byte {
+	file_time_proto_rawDescOnce.Do(func() {
+		file_time_proto_rawDescData = protoimpl.X.CompressGZIP(unsafe.Slice(unsafe.StringData(file_time_proto_rawDesc), len(file_time_proto_rawDesc)))
 	})
-	return file_grpc_time_proto_rawDescData
+	return file_time_proto_rawDescData
 }
 
-var file_grpc_time_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
-var file_grpc_time_proto_goTypes = []any{
+var file_time_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
+var file_time_proto_goTypes = []any{
 	(*PostCurrentMessage)(nil),         // 0: chatservice.v1.PostCurrentMessage
 	(*PostCurrentMessageResponse)(nil), // 1: chatservice.v1.PostCurrentMessageResponse
 	(*ConnectRequest)(nil),             // 2: chatservice.v1.ConnectRequest
@@ -367,7 +368,7 @@ var file_grpc_time_proto_goTypes = []any{
 	(*ResponseId)(nil),                 // 5: chatservice.v1.ResponseId
 	(*timestamppb.Timestamp)(nil),      // 6: google.protobuf.Timestamp
 }
-var file_grpc_time_proto_depIdxs = []int32{
+var file_time_proto_depIdxs = []int32{
 	6, // 0: chatservice.v1.PostCurrentMessage.time:type_name -> google.protobuf.Timestamp
 	6, // 1: chatservice.v1.BroadCast.time:type_name -> google.protobuf.Timestamp
 	0, // 2: chatservice.v1.ChatService.PostMessage:input_type -> chatservice.v1.PostCurrentMessage
@@ -383,26 +384,26 @@ var file_grpc_time_proto_depIdxs = []int32{
 	0, // [0:2] is the sub-list for field type_name
 }
 
-func init() { file_grpc_time_proto_init() }
-func file_grpc_time_proto_init() {
-	if File_grpc_time_proto != nil {
+func init() { file_time_proto_init() }
+func file_time_proto_init() {
+	if File_time_proto != nil {
 		return
 	}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
-			RawDescriptor: unsafe.Slice(unsafe.StringData(file_grpc_time_proto_rawDesc), len(file_grpc_time_proto_rawDesc)),
+			RawDescriptor: unsafe.Slice(unsafe.StringData(file_time_proto_rawDesc), len(file_time_proto_rawDesc)),
 			NumEnums:      0,
 			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   1,
 		},
-		GoTypes:           file_grpc_time_proto_goTypes,
-		DependencyIndexes: file_grpc_time_proto_depIdxs,
-		MessageInfos:      file_grpc_time_proto_msgTypes,
+		GoTypes:           file_time_proto_goTypes,
+		DependencyIndexes: file_time_proto_depIdxs,
+		MessageInfos:      file_time_proto_msgTypes,
 	}.Build()
-	File_grpc_time_proto = out.File
-	file_grpc_time_proto_goTypes = nil
-	file_grpc_time_proto_depIdxs = nil
+	File_time_proto = out.File
+	file_time_proto_goTypes = nil
+	file_time_proto_depIdxs = nil
 }

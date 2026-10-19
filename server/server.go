@@ -4,6 +4,7 @@ import (
 	"context"
 	"log"
 	"net"
+	"sync"
 	"time"
 
 	"google.golang.org/grpc"
@@ -16,6 +17,7 @@ type chatServer struct {
 	pb.UnimplementedChatServiceServer
 	idCount  int32
 	usersMap map[int32]client
+	mu 	 sync.Mutex
 }
 
 func newChatServer() *chatServer {
@@ -26,61 +28,64 @@ type client struct {
 	username string
 	stream   pb.ChatService_ConnectServer
 }
-
-func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage) (*pb.PostCurrentMessageResponse, error) {
-	log.Printf("%s", msg.Message)
-
-	for id, user := range s.usersMap {
-		if id == msg.ClientId {
-			continue
-		}
-		err := user.stream.Send(&pb.BroadCast{
-			Time:     msg.Time,
-			Message:  msg.Message,
-			Username: s.usersMap[msg.ClientId].username,
-		})
-		if err != nil {
-			log.Printf("Error sending message to user %s: %v", user.username, err)
-		}
-	}
-
-	return &pb.PostCurrentMessageResponse{
-		Success: true,
-	}, nil
-}
-
-func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
-	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
-	log.Printf("user %s joined", req.Username)
-
-	for id, user := range s.usersMap {
-		if id == req.ClientId {
-			continue
-		}
-		err := user.stream.Send(&pb.BroadCast{
-			Time:     timestamppb.New(time.Now()),
-			Message:  req.Username + " joined the chat!",
-			Username: "Server",
-		})
-		if err != nil {
-			log.Fatalf(err.Error())
-		}
-	}
-
-	<-stream.Context().Done()
-	delete(s.usersMap, req.ClientId)
-
-	return nil
-}
-
 func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.ResponseId, error) {
 	s.idCount++
 	log.Printf("Generated new ID: %d", s.idCount)
 	return &pb.ResponseId{ClientId: s.idCount}, nil
 }
 
-func broadcast(msg *pb.BroadCast) {
+func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
+	s.mu.Lock()
+	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
+	s.mu.Unlock()
+	log.Printf("user %s joined", req.Username)
 
+	broadcast(&pb.BroadCast{
+		Time:     timestamppb.New(time.Now()),
+		Message:  req.Username + " joined the chat!",
+		Username: "Server",
+	}, req.ClientId, s)
+
+	<-stream.Context().Done()
+	s.mu.Lock()
+	delete(s.usersMap, req.ClientId)
+	s.mu.Unlock()
+
+	broadcast(&pb.BroadCast{
+		Time:     timestamppb.New(time.Now()),
+		Message:  req.Username + " Left the chat!",
+		Username: "Server",
+	}, req.ClientId, s)
+
+	return nil
+}
+
+func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage) (*pb.PostCurrentMessageResponse, error) {
+	log.Printf("%s", msg.Message)
+
+	broadcast(&pb.BroadCast{
+		Time:     msg.Time,
+		Message:  msg.Message,
+		Username: s.usersMap[msg.ClientId].username,
+	}, msg.ClientId, s)
+
+	return &pb.PostCurrentMessageResponse{
+		Success: true,
+	}, nil
+}
+
+func broadcast(msg *pb.BroadCast, senderId int32, s *chatServer) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	for id, user := range s.usersMap {
+		if id == senderId {
+			continue
+		}
+		err := user.stream.Send(msg)
+		if err != nil {
+			log.Printf("Error sending join message to user %s %v", user.username, err)
+		}
+	}
 }
 
 func main() {
