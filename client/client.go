@@ -38,11 +38,15 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
+	wg.Add(1)
+	go clockKeeper()
+	getClock(0)
 	idResp, err := pb.NewChatServiceClient(conn).GetId(ctx, &pb.RequestId{})
 	myId = idResp.ClientId
 	if err != nil {
 		log.Fatalf("dial: %v", err)
 	}
+
 
 	scanner.Scan()
 	postConnection := pb.ConnectRequest{
@@ -50,11 +54,11 @@ func main() {
 		ClientId: myId,
 	}
 
+	getClock(0)
 	conResp, err := pb.NewChatServiceClient(conn).Connect(ctx, &postConnection)
 	stream = conResp
 
-	wg.Add(3)
-	go clockKeeper()
+	wg.Add(2)
 	go broadcastMessages()
 	go sendMessages(conn, ctx)
 	wg.Wait()
