@@ -31,19 +31,22 @@ type client struct {
 
 func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.ResponseId, error) {
 	s.mu.Lock()
-	s.idCount++
+	defer s.mu.Unlock()
 	s.lamportClock = max(s.lamportClock, req.Time) + 1
-	s.mu.Unlock()
+	s.idCount++
 	log.Printf("Server, LC(%d), Client getId event, Generated new ID: %d", s.lamportClock, s.idCount)
+	
+	s.lamportClock++
 	return &pb.ResponseId{ClientId: s.idCount, Time: s.lamportClock}, nil
 }
 
 func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
 	s.mu.Lock()
-	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
 	s.lamportClock = max(s.lamportClock, req.Time) + 1
+	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
 	log.Printf("Server, LC(%d), Client connection event, User %s joined Chit Chat", s.lamportClock, req.Username)
-
+	
+	s.lamportClock++
 	broadcast(&pb.BroadCast{
 		Time:     s.lamportClock,
 		Message:  "Participant " + req.Username + " joined Chit Chat at logical time " + fmt.Sprintf("%d", s.lamportClock),
@@ -72,6 +75,7 @@ func (s *chatServer) PostMessage(ctx context.Context, msg *pb.PostCurrentMessage
 	s.lamportClock = max(s.lamportClock, msg.Time) + 1
 	log.Printf("Server, LC(%d), Client post message event, User %s: %s", s.lamportClock, s.usersMap[msg.ClientId].username, msg.Message)
 
+	s.lamportClock++
 	broadcast(&pb.BroadCast{
 		Time:     s.lamportClock,
 		Message:  msg.Message,
