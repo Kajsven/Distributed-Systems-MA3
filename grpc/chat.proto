@@ -38,4 +38,5 @@ message RequestId{
 
 message ResponseId{
   int32 clientId = 1;
+  int64 time = 2;
 }

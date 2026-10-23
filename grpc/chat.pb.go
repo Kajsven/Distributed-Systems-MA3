@@ -7,12 +7,11 @@
 package chat
 
 import (
+	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
+	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 	reflect "reflect"
 	sync "sync"
 	unsafe "unsafe"
-
-	protoreflect "google.golang.org/protobuf/reflect/protoreflect"
-	protoimpl "google.golang.org/protobuf/runtime/protoimpl"
 )
 
 const (
@@ -293,6 +292,7 @@ func (x *RequestId) GetTime() int64 {
 type ResponseId struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	ClientId      int32                  `protobuf:"varint,1,opt,name=clientId,proto3" json:"clientId,omitempty"`
+	Time          int64                  `protobuf:"varint,2,opt,name=time,proto3" json:"time,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -334,6 +334,13 @@ func (x *ResponseId) GetClientId() int32 {
 	return 0
 }
 
+func (x *ResponseId) GetTime() int64 {
+	if x != nil {
+		return x.Time
+	}
+	return 0
+}
+
 var File_chat_proto protoreflect.FileDescriptor
 
 const file_chat_proto_rawDesc = "" +
@@ -355,10 +362,11 @@ const file_chat_proto_rawDesc = "" +
 	"\amessage\x18\x02 \x01(\tR\amessage\x12\x1a\n" +
 	"\busername\x18\x03 \x01(\tR\busername\"\x1f\n" +
 	"\tRequestId\x12\x12\n" +
-	"\x04time\x18\x01 \x01(\x03R\x04time\"(\n" +
+	"\x04time\x18\x01 \x01(\x03R\x04time\"<\n" +
 	"\n" +
 	"ResponseId\x12\x1a\n" +
-	"\bclientId\x18\x01 \x01(\x05R\bclientId2\xf4\x01\n" +
+	"\bclientId\x18\x01 \x01(\x05R\bclientId\x12\x12\n" +
+	"\x04time\x18\x02 \x01(\x03R\x04time2\xf4\x01\n" +
 	"\vChatService\x12]\n" +
 	"\vPostMessage\x12\".chatservice.v1.PostCurrentMessage\x1a*.chatservice.v1.PostCurrentMessageResponse\x12F\n" +
 	"\aConnect\x12\x1e.chatservice.v1.ConnectRequest\x1a\x19.chatservice.v1.BroadCast0\x01\x12>\n" +

@@ -42,6 +42,7 @@ func main() {
 	go clockKeeper()
 	idResp, err := pb.NewChatServiceClient(conn).GetId(ctx, &pb.RequestId{Time: getClock(0)})
 	myId = idResp.ClientId
+	getClock(idResp.Time)
 	if err != nil {
 		log.Fatalf("dial: %v", err)
 	}

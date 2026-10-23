@@ -35,7 +35,7 @@ func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.Response
 	s.lamportClock = max(s.lamportClock, req.Time) + 1
 	s.mu.Unlock()
 	log.Printf("Server, LC(%d), Client getId event, Generated new ID: %d", s.lamportClock, s.idCount)
-	return &pb.ResponseId{ClientId: s.idCount}, nil
+	return &pb.ResponseId{ClientId: s.idCount, Time: s.lamportClock}, nil
 }
 
 func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
