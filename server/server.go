@@ -32,7 +32,7 @@ type client struct {
 func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.ResponseId, error) {
 	s.mu.Lock()
 	s.idCount++
-	s.lamportClock++
+	s.lamportClock = max(s.lamportClock, req.Time) + 1
 	s.mu.Unlock()
 	log.Printf("Server, LC(%d), Client getId event, Generated new ID: %d", s.lamportClock, s.idCount)
 	return &pb.ResponseId{ClientId: s.idCount}, nil
@@ -41,7 +41,7 @@ func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.Response
 func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
 	s.mu.Lock()
 	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
-	s.lamportClock++
+	s.lamportClock = max(s.lamportClock, req.Time) + 1
 	log.Printf("Server, LC(%d), Client connection event, User %s joined Chit Chat", s.lamportClock, req.Username)
 
 	broadcast(&pb.BroadCast{

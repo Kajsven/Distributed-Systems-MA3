@@ -4,8 +4,6 @@ package chatservice.v1;
 
 option go_package = "Distributed-Systems-MA3/grpc/chat";
 
-import "google/protobuf/timestamp.proto";
-
 service ChatService {
   rpc PostMessage(PostCurrentMessage) returns (PostCurrentMessageResponse);
   rpc Connect(ConnectRequest) returns (stream BroadCast);
@@ -25,7 +23,8 @@ message PostCurrentMessageResponse {
 message ConnectRequest {
   int32 clientId = 1;
   string username = 2;
-}
+  int64 time = 3;
+  }
 
 message BroadCast {
   int64 time = 1;
@@ -33,7 +32,9 @@ message BroadCast {
   string username = 3;
 }
 
-message RequestId{}
+message RequestId{
+  int64 time = 1;
+}
 
 message ResponseId{
   int32 clientId = 1;

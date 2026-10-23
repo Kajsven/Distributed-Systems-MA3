@@ -40,8 +40,7 @@ func main() {
 
 	wg.Add(1)
 	go clockKeeper()
-	getClock(0)
-	idResp, err := pb.NewChatServiceClient(conn).GetId(ctx, &pb.RequestId{})
+	idResp, err := pb.NewChatServiceClient(conn).GetId(ctx, &pb.RequestId{Time: getClock(0)})
 	myId = idResp.ClientId
 	if err != nil {
 		log.Fatalf("dial: %v", err)
@@ -52,9 +51,9 @@ func main() {
 	postConnection := pb.ConnectRequest{
 		Username: scanner.Text(),
 		ClientId: myId,
+		Time:    getClock(0),
 	}
 
-	getClock(0)
 	conResp, err := pb.NewChatServiceClient(conn).Connect(ctx, &postConnection)
 	stream = conResp
 
@@ -65,7 +64,7 @@ func main() {
 }
 
 func clockKeeper() {
-	var lamportClock int64
+var lamportClock int64
 	for req := range clockCh {
 		lamportClock = max(lamportClock, req.received) + 1
 		req.reply <- lamportClock
@@ -114,6 +113,6 @@ func broadcastMessages() {
 		if err != nil {
 			log.Fatalf("can not receive %v", err)
 		}
-		fmt.Printf("%s, %s, LC(%d): %s\n", resp.Username, time.Now().Local().Format("15:04"), getClock(resp.Time)-1, resp.Message)
+		fmt.Printf("%s, %s, LC(%d): %s\n", resp.Username, time.Now().Local().Format("15:04"), getClock(resp.Time), resp.Message)
 	}
 }
