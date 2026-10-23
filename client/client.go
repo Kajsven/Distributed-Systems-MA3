@@ -77,7 +77,12 @@ func getClock(received int64) int64 {
 func sendMessages(conn *grpc.ClientConn, ctx context.Context) {
 	defer wg.Done()
 	for {
-		scanner.Scan()
+		if !scanner.Scan() {
+			if scanner.Err() != nil {
+				log.Fatalf("scanner error: %v", scanner.Err())
+			}
+			break
+		}
 		text := scanner.Text()
 		if len(text) == 0 || len(text) > 128 {
 			log.Println("Text must be between 0 and 128 characters")
