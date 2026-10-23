@@ -1,0 +1,15 @@
+2026/10/23 14:38:21 TimeService listening on :50051
+2026/10/23 14:38:22 Server, LC(2), Client getId event, Generated new ID: 1
+2026/10/23 14:38:25 Server, LC(4), Client getId event, Generated new ID: 2
+2026/10/23 14:38:26 Server, LC(6), Client connection event, User c1 joined Chit Chat
+2026/10/23 14:38:28 Server, LC(8), Client connection event, User c2 joined Chit Chat
+2026/10/23 14:38:32 Server, LC(12), Client post message event, User c2: hello
+2026/10/23 14:38:35 Server, LC(16), Client post message event, User c1: hi c2
+2026/10/23 14:38:39 Server, LC(18), Client post message event, User c1: how are you doing?
+2026/10/23 14:38:42 Server, LC(22), Client post message event, User c2: byebye
+2026/10/23 14:38:43 Server, LC(24), Client disconnection event, User c2 left Chit Chat
+2026/10/23 14:38:45 Server, LC(25), Client disconnection event, User c1 left Chit Chat
+2026/10/23 14:38:47 Server, LC(26), Client getId event, Generated new ID: 3
+2026/10/23 14:38:50 Server, LC(30), Client connection event, User c3 joined Chit Chat
+2026/10/23 14:38:52 Server, LC(34), Client post message event, User c3: :)
+2026/10/23 14:38:55 Server, LC(36), Client disconnection event, User c3 left Chit Chat
