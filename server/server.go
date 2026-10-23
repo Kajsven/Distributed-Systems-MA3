@@ -41,9 +41,9 @@ func (s *chatServer) GetId(ctx context.Context, req *pb.RequestId) (*pb.Response
 func (s *chatServer) Connect(req *pb.ConnectRequest, stream pb.ChatService_ConnectServer) error {
 	s.mu.Lock()
 	s.usersMap[req.ClientId] = client{username: req.Username, stream: stream}
+	s.lamportClock++
 	log.Printf("Server, LC(%d), Client connection event, User %s joined Chit Chat", s.lamportClock, req.Username)
 
-	s.lamportClock++
 	broadcast(&pb.BroadCast{
 		Time:     s.lamportClock,
 		Message:  "Participant " + req.Username + " joined Chit Chat at logical time " + fmt.Sprintf("%d", s.lamportClock),
